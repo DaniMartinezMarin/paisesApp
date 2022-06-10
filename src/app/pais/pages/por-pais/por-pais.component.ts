@@ -23,7 +23,7 @@ export class PorPaisComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  buscar( termino : string ) {
+  buscar( termino : string ): void {
     this.isBusquedaError = false;
     this.termino = termino;
 
@@ -36,6 +36,11 @@ export class PorPaisComponent implements OnInit {
         this._paises = [];
       }
     );
+  }
+
+  mostrarSugerencias(termino: string): void {
+    this.isBusquedaError = false;
+    //TODO: Mostrar sugerencias
   }
 
 }
