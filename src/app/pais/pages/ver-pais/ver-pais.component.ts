@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Pais } from '../../interfaces/pais.interface';
+import { PaisService } from '../../services/pais.service';
 
 @Component({
   selector: 'app-ver-pais',
@@ -7,9 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerPaisComponent implements OnInit {
 
-  constructor() { }
+  constructor( 
+    private ngActivatedRoute: ActivatedRoute,
+    private ngPaisService: PaisService 
+  ) { }
 
   ngOnInit(): void {
+
+    this.ngActivatedRoute.params
+      .subscribe( 
+        ( {id} ) => { //desestructuracion
+          console.log(id); 
+          this.ngPaisService.getPaisPorId(id)
+            .subscribe(
+              (pais: Pais[]) => {
+                console.log(pais);
+              },
+              (error) => {
+                console.error('Se ha producido un error: ', error);
+              }
+            )
+        }
+      )
   }
 
 }
