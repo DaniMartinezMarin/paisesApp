@@ -6,25 +6,31 @@ import { PaisService } from '../../services/pais.service';
 @Component({
   selector: 'app-por-pais',
   templateUrl: './por-pais.component.html',
-  styleUrls: ['./por-pais.component.css']
+  styleUrls: ['./por-pais.component.css'],
 })
 export class PorPaisComponent implements OnInit {
-
   termino: string = '';
   isBusquedaError: boolean = false;
-  private _paises: Pais[] = [];
+  showSugerencias: boolean = false;
 
-  get paises() : Pais[] {
+  private _paises: Pais[] = [];
+  private _paisesSugeridos: Pais[] = [];
+
+  get paises(): Pais[] {
     return [...this._paises];
   }
 
-  constructor( private paisService: PaisService ) { }
-
-  ngOnInit(): void {
+  get paisesSugeridos(): Pais[] {
+    return [...this._paisesSugeridos];
   }
 
-  buscar( termino : string ): void {
+  constructor(private paisService: PaisService) {}
+
+  ngOnInit(): void {}
+
+  buscar(termino: string): void {
     this.isBusquedaError = false;
+    this.showSugerencias = false;
     this.termino = termino;
 
     this.paisService.getPais(this.termino).subscribe(
@@ -40,7 +46,18 @@ export class PorPaisComponent implements OnInit {
 
   mostrarSugerencias(termino: string): void {
     this.isBusquedaError = false;
-    //TODO: Mostrar sugerencias
+    this.showSugerencias = true;
+    this.termino = termino;
+
+    this.paisService.getPais(termino)
+    .subscribe(
+      (paises: Pais[]) => {
+        this._paisesSugeridos = paises.splice(0, 5);
+      },
+      (error: HttpErrorResponse) => {
+        this._paisesSugeridos = [];
+      }
+    );
   }
 
 }
