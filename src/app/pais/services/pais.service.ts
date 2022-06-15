@@ -25,4 +25,9 @@ export class PaisService {
     const url = `${this._apiUrl}/alpha/${id}`;
     return this.ngHttpClient.get<Pais[]>(url);
   }
+
+  getPaisPorRegion( termino: String ): Observable<Pais[]> {
+    const url = `${this._apiUrl}/region/${termino}`;
+    return this.ngHttpClient.get<Pais[]>(url);
+  }
 }

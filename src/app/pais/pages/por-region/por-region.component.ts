@@ -1,4 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Pais } from '../../interfaces/pais.interface';
+import { PaisService } from '../../services/pais.service';
 
 @Component({
   selector: 'app-por-region',
@@ -9,7 +12,13 @@ export class PorRegionComponent {
   regiones: string[] = ['africa', 'americas', 'asia', 'europe', 'oceania'];
   regionActiva: string = '';
 
-  constructor() {}
+  private _paises: Pais[] = [];
+
+  get paises(): Pais[] {
+    return [...this._paises];
+  }
+
+  constructor( private paisService: PaisService) {}
 
   getClaseCss(region: String) {
     return region === this.regionActiva
@@ -18,6 +27,22 @@ export class PorRegionComponent {
   }
 
   activarRegion(region: string) {
+
+    if(this.regionActiva === region) return;
+
     this.regionActiva = region;
+    this.buscar(this.regionActiva);
+  }
+
+  buscar( termino : string ): void {
+
+    this.paisService.getPaisPorRegion(termino).subscribe(
+      (paises: Pais[]) => {
+        this._paises = paises;
+      },
+      (error: HttpErrorResponse) => {
+        this._paises = [];
+      }
+    );
   }
 }
