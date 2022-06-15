@@ -27,7 +27,7 @@ export class VerPaisComponent implements OnInit {
     )
     .subscribe(
       (paises: Pais[]) => {
-        this.pais = paises[0];                
+        this.pais = paises[0];
       }
     );
 
