@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { tap } from 'rxjs/operators';
 import { Pais } from '../../interfaces/pais.interface';
 import { PaisService } from '../../services/pais.service';
 
@@ -18,7 +19,7 @@ export class PorRegionComponent {
     return [...this._paises];
   }
 
-  constructor( private paisService: PaisService) {}
+  constructor(private paisService: PaisService) {}
 
   getClaseCss(region: String) {
     return region === this.regionActiva
@@ -27,22 +28,23 @@ export class PorRegionComponent {
   }
 
   activarRegion(region: string) {
-
-    if(this.regionActiva === region) return;
+    if (this.regionActiva === region) return;
 
     this.regionActiva = region;
     this.buscar(this.regionActiva);
   }
 
-  buscar( termino : string ): void {
-
-    this.paisService.getPaisPorRegion(termino).subscribe(
-      (paises: Pais[]) => {
-        this._paises = paises;
-      },
-      (error: HttpErrorResponse) => {
-        this._paises = [];
-      }
-    );
+  buscar(termino: string): void {
+    this.paisService
+      .getPaisPorRegion(termino)
+      .pipe(tap(console.log))
+      .subscribe(
+        (paises: Pais[]) => {
+          this._paises = paises;
+        },
+        (error: HttpErrorResponse) => {
+          this._paises = [];
+        }
+      );
   }
 }
